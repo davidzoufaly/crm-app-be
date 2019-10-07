@@ -1,0 +1,23 @@
+{
+  "name": "customerfybe",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc -p .",
+    "dev": "ts-node-dev --respawn --transpileOnly .",
+    "prod": "tsc && node ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/express": "^4.17.1",
+    "@types/mongodb": "^3.3.5",
+    "@types/request": "^2.48.3",
+    "express": "^4.17.1",
+    "mongodb": "^3.3.2",
+    "ts-node-dev": "^1.0.0-pre.43",
+    "typescript": "^3.6.3"
+  }
+}
