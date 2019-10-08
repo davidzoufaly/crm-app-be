@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { Request, Response } from "express";
 import { MongoClient, ObjectId } from "mongodb";
 
 //TODO: REFACTORING NA JEDNO PŘIPOJENÍ A VNOŘENÍ ROUTER IN?
@@ -32,8 +31,8 @@ router.get("/", (req, res) => {
     console.log(err);
     const dbTarget = client.db(db).collection(collection);
     try {
-      dbTarget.find({}).toArray((error, data) => {
-        if (err) throw error;
+      dbTarget.find({}).toArray((err, data) => {
+        if (err) throw err;
         res.send(data);
         client.close();
       });
@@ -51,8 +50,8 @@ router.get("/:id", (req, res) => {
     console.log(err);
     const dbTarget = client.db(db).collection(collection);
     try {
-      dbTarget.findOne({ _id: new ObjectId(id) }, (error, data) => {
-        if (err) throw error;
+      dbTarget.findOne({ _id: new ObjectId(id) }, (err, data) => {
+        if (err) throw err;
         res.send(data);
         client.close();
       });
