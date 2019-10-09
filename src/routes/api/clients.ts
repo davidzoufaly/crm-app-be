@@ -12,8 +12,8 @@ import { MongoClient, ObjectId } from "mongodb";
 const uri = `mongodb://localhost:27017/admin`;
 
 const client = new MongoClient(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useNewUrlParser: true
 });
 const db = "crm-app";
 const collection = "clients";
@@ -53,8 +53,9 @@ router.get("/:id", (req, res) => {
       dbTarget.findOne({ _id: new ObjectId(id) }, (err, data) => {
         if (err) throw err;
         res.send(data);
-        client.close();
       });
+      client.close();
+      console.log(client.isConnected());
     } catch (err) {
       console.log(err);
     }
