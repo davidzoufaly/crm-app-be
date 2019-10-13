@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { MongoClient, ObjectId } from "mongodb";
+import moment from "moment";
 
-//TODO: REFACTORING NA JEDNO PŘIPOJENÍ A VNOŘENÍ ROUTER IN?
+//TODO: Ondstranit alerty v consoli
 
 //? ATLAS CONNECTION
 // const username = "RW";
@@ -17,7 +18,7 @@ const client = new MongoClient(uri, {
 });
 const db = "crm-app";
 const collection = "clients";
-const router = Router();
+const routerClients = Router();
 
 const msges = {
   success: "Success",
@@ -25,63 +26,74 @@ const msges = {
 };
 
 //? Get All Clients
-router.get("/", (req, res) => {
-  client.connect(err => {
+routerClients.get("/", (req, res) => {
+  client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
     const dbTarget = client.db(db).collection(collection);
     try {
       dbTarget.find({}).toArray((err, data) => {
         if (err) throw err;
-        res.send(data);
+        res.status(200).json(data);
         client.close();
       });
     } catch (err) {
       console.log(err);
+      res.status(400).json({ msg: msges.error });
+    }
+  });
+});
+
+//? Number of clients
+routerClients.get("/count", (req, res) => {
+  client.connect((err, client) => {
+    if (err) throw err;
+    console.log(err);
+    const dbTarget = client.db(db).collection(collection);
+    try {
+      dbTarget.countDocuments({}, ((err, data) => {
+        if (err) throw err;
+        res.status(200).json({data});
+        client.close();
+      }));
+    } catch (err) {
+      console.log(err);
+      res.status(400).json({msg: msges.error})
     }
   });
 });
 
 //? Get Single Client
-router.get("/:id", (req, res) => {
+routerClients.get("/:id", (req, res) => {
   const id = req.params.id;
-  client.connect(err => {
+  client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
     const dbTarget = client.db(db).collection(collection);
     try {
       dbTarget.findOne({ _id: new ObjectId(id) }, (err, data) => {
         if (err) throw err;
-        res.send(data);
+        res.status(200).json(data);
       });
       client.close();
       console.log(client.isConnected());
     } catch (err) {
       console.log(err);
+      res.status(400).json({ msg: msges.error });
     }
   });
 });
 
 //? Create Client
-router.post("/", (req, res) => {
-  interface newClientOptions {
-    name: string;
-    age: number;
-    address: string;
-  }
-
-  const newClient: newClientOptions = {
-    name: req.body.name,
-    age: req.body.age,
-    address: req.body.address
-  };
-
-  client.connect(err => {
+routerClients.post("/", (req, res) => {
+  let reqObject = req.body;
+  reqObject.dateAdded = moment().format("llll");
+  client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
     const dbTarget = client.db(db).collection(collection);
     try {
-      dbTarget.insertOne(newClient);
+      dbTarget.insertOne(reqObject);
       res.status(200).json({ msg: msges.success });
       client.close();
     } catch (err) {
@@ -92,28 +104,18 @@ router.post("/", (req, res) => {
 });
 
 //? Update Client
-router.put("/:id", (req, res) => {
+routerClients.put("/:id", (req, res) => {
   const id = req.params.id;
 
-  interface changeClientOptions {
-    name: string;
-    age: number;
-    address: string;
-  }
+  let reqObject = req.body;
+  reqObject.lastModified = moment().format("llll");
 
-  //? Update changed fields, other fields will be kept with old data.
-  const $set: changeClientOptions = {
-    name: req.body.name,
-    age: req.body.age,
-    address: req.body.address
-  };
-
-  client.connect(err => {
+  client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
     const dbTarget = client.db(db).collection(collection);
     try {
-      dbTarget.updateOne({ _id: new ObjectId(id) }, { $set });
+      dbTarget.updateOne({ _id: new ObjectId(id) }, { $set: reqObject });
       res.status(200).json({ msg: msges.success });
       client.close();
     } catch (err) {
@@ -123,16 +125,16 @@ router.put("/:id", (req, res) => {
   });
 });
 
-//? Client member
-router.delete("/:id", (req, res) => {
+//? Client delete
+routerClients.delete("/:id", (req, res) => {
   const id = req.params.id;
 
-  client.connect(err => {
+  client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
     const dbTarget = client.db(db).collection(collection);
     try {
-      dbTarget.remove({ _id: new ObjectId(id) });
+      dbTarget.deleteOne({ _id: new ObjectId(id) });
       res.status(200).json({ msg: msges.success });
       client.close();
     } catch (err) {
@@ -142,4 +144,4 @@ router.delete("/:id", (req, res) => {
   });
 });
 
-export default router;
+export default routerClients;
