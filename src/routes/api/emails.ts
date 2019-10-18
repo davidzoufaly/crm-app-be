@@ -19,7 +19,7 @@ const msges = {
 };
 
 //? Get All Emails
-routerEmails.get("/", (req, res) => {
+routerEmails.get("/", (_, res) => {
     client.connect((err, client) => {
       if (err) throw err;
       console.log(err);
@@ -74,6 +74,8 @@ routerEmails.get("/count", (_, res) => {
     }
   });
 });
+
+//? Save email settings
 routerEmails.post("/" , (req, res) => {
     client.connect((err, client) => {
         if (err) throw err;
@@ -95,7 +97,7 @@ routerEmails.post("/" , (req, res) => {
 //? Save and send Email
 routerEmails.post("/send", (req, res) => {
   const email = req.body;
-  email.sent = moment().format("llll");
+  email.date = moment().format("llll");
 
  client.connect((err, client) => {
     if (err) throw err;
@@ -127,7 +129,7 @@ routerEmails.post("/send", (req, res) => {
           from: data.username,
           to: email.to,
           subject: email.subject,
-          text: email.text
+          text: email.message
         };
         transporter.sendMail(mailOptions, (error, info) => {
           if (error) {
