@@ -19,7 +19,7 @@ const client = new MongoClient(uri, {
 const db = "crm-app";
 const collection = "clients";
 const routerClients = Router();
-
+client.isConnected;
 const msges = {
   success: "Success",
   error: "Error"
@@ -44,6 +44,28 @@ routerClients.get("/", (req, res) => {
   });
 });
 
+//? Delete multiple object
+routerClients.delete("/", (req, res) => {
+  const ids = req.body.map((e: string) => new ObjectId(e));
+
+  console.log(req.body);
+  client.connect((err, client) => {
+    if (err) throw err;
+    console.log(err);
+    const dbTarget = client.db(db).collection(collection);
+    try {
+      dbTarget.deleteMany({ _id: { $in: ids } }, err => {
+        if (err) throw err;
+        res.status(200).json({ msg: msges.success });
+        client.close();
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(400).json({ msg: msges.error });
+    }
+  });
+});
+
 //? Number of clients
 routerClients.get("/count", (req, res) => {
   client.connect((err, client) => {
@@ -51,14 +73,14 @@ routerClients.get("/count", (req, res) => {
     console.log(err);
     const dbTarget = client.db(db).collection(collection);
     try {
-      dbTarget.countDocuments({}, ((err, data) => {
+      dbTarget.countDocuments({}, (err, data) => {
         if (err) throw err;
-        res.status(200).json({data});
+        res.status(200).json({ data });
         client.close();
-      }));
+      });
     } catch (err) {
       console.log(err);
-      res.status(400).json({msg: msges.error})
+      res.status(400).json({ msg: msges.error });
     }
   });
 });
@@ -76,7 +98,6 @@ routerClients.get("/:id", (req, res) => {
         res.status(200).json(data);
       });
       client.close();
-      console.log(client.isConnected());
     } catch (err) {
       console.log(err);
       res.status(400).json({ msg: msges.error });
@@ -87,7 +108,9 @@ routerClients.get("/:id", (req, res) => {
 //? Create Client
 routerClients.post("/", (req, res) => {
   let reqObject = req.body;
+  reqObject._id = new ObjectId(reqObject._id);
   reqObject.dateAdded = moment().format("llll");
+  
   client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
@@ -96,10 +119,12 @@ routerClients.post("/", (req, res) => {
       dbTarget.insertOne(reqObject);
       res.status(200).json({ msg: msges.success });
       client.close();
+      console.log(client.isConnected())
     } catch (err) {
       console.log(err);
       res.status(400).json({ msg: msges.error });
     }
+    console.log(client.isConnected())
   });
 });
 
@@ -108,7 +133,11 @@ routerClients.put("/:id", (req, res) => {
   const id = req.params.id;
 
   let reqObject = req.body;
+  // remove id from req -> cant be passed to DB
+  delete reqObject["_id"];
+  //add timestamp when its changed
   reqObject.lastModified = moment().format("llll");
+  // console.log(reqObject)
 
   client.connect((err, client) => {
     if (err) throw err;

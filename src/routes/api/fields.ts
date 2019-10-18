@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { MongoClient, ObjectId } from "mongodb";
+import moment from "moment";
+
 
 //? LOCALHOST CONNECTION
 const uri = `mongodb://localhost:27017/admin`;
@@ -76,11 +78,12 @@ routerFields.get("/:id", (req, res) => {
   });
 });
 
-//? Create Field
+//? Save Field
 routerFields.post("/", (req, res) => {
 
   let fieldObject = req.body;
   fieldObject.fieldPermanent = false;
+  fieldObject.dateAdded = moment().format("llll");
   
   client.connect((err, client) => {
     if (err) throw err;

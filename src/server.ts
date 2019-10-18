@@ -3,6 +3,7 @@ import Logger from "./routes/middlewares/Logger";
 import Cors from './routes/middlewares/Cors';
 import routerClients from './routes/api/clients';
 import routerFields from './routes/api/fields';
+import routerEmails from './routes/api/emails';
 
 /*TODO: FIXNOUT .close() 
 the options [servers] is not supported
@@ -24,6 +25,7 @@ app.use(express.urlencoded({extended: false}))
 // API Clients
 app.use('/api/clients', routerClients);
 app.use('/api/fields', routerFields);
+app.use('/api/emails', routerEmails);
 
 app.get("/", (req, res) => {
   res.send("This is backend of CRM-APP");
