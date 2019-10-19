@@ -26,8 +26,8 @@ const msges = {
 };
 
 //? Get All Clients
-routerClients.get("/", (req, res) => {
-  client.connect((err, client) => {
+routerClients.get("/", (_, res) => {
+    client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
     const dbTarget = client.db(db).collection(collection);
@@ -109,8 +109,7 @@ routerClients.get("/:id", (req, res) => {
 routerClients.post("/", (req, res) => {
   let reqObject = req.body;
   reqObject._id = new ObjectId(reqObject._id);
-  reqObject.dateAdded = moment().format("llll");
-  
+
   client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
@@ -119,12 +118,10 @@ routerClients.post("/", (req, res) => {
       dbTarget.insertOne(reqObject);
       res.status(200).json({ msg: msges.success });
       client.close();
-      console.log(client.isConnected())
     } catch (err) {
       console.log(err);
       res.status(400).json({ msg: msges.error });
     }
-    console.log(client.isConnected())
   });
 });
 
@@ -135,9 +132,6 @@ routerClients.put("/:id", (req, res) => {
   let reqObject = req.body;
   // remove id from req -> cant be passed to DB
   delete reqObject["_id"];
-  //add timestamp when its changed
-  reqObject.lastModified = moment().format("llll");
-  // console.log(reqObject)
 
   client.connect((err, client) => {
     if (err) throw err;

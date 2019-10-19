@@ -8,7 +8,8 @@ const uri = `mongodb://localhost:27017/admin`;
 
 const client = new MongoClient(uri, {
   useUnifiedTopology: true,
-  useNewUrlParser: true
+  useNewUrlParser: true,
+   
 });
 const db = "crm-app";
 const routerEmails = Router();
