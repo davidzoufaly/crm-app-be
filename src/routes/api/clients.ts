@@ -48,7 +48,6 @@ routerClients.get("/", (_, res) => {
 routerClients.delete("/", (req, res) => {
   const ids = req.body.map((e: string) => new ObjectId(e));
 
-  console.log(req.body);
   client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
