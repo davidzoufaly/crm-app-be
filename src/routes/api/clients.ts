@@ -19,7 +19,6 @@ const client = new MongoClient(uri, {
 const db = "crm-app";
 const collection = "clients";
 const routerClients = Router();
-client.isConnected;
 const msges = {
   success: "Success",
   error: "Error"
@@ -107,6 +106,7 @@ routerClients.get("/:id", (req, res) => {
 //? Create Client
 routerClients.post("/", (req, res) => {
   let reqObject = req.body;
+  reqObject["Date added"] = moment().format('llll')
   reqObject._id = new ObjectId(reqObject._id);
 
   client.connect((err, client) => {

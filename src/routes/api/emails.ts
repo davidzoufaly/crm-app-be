@@ -43,9 +43,9 @@ routerEmails.get("/", (_, res) => {
     client.connect((err, client) => {
       if (err) throw err;
       console.log(err);
-      const dbTarget = client.db(db).collection("emailSettings");
+      const dbTarget = client.db(db).collection("settings");
       try {
-        dbTarget.findOne({}, (err, data) => {
+        dbTarget.findOne({settingsName : "emailSettings"}, (err, data) => {
           if (err) throw err;
           res.status(200).json(data);
           client.close();
@@ -82,9 +82,9 @@ routerEmails.post("/" , (req, res) => {
         if (err) throw err;
         console.log(err);
 
-        const dbTarget = client.db(db).collection("emailSettings");
+        const dbTarget = client.db(db).collection("settings");
         try {
-            dbTarget.updateOne({},{$set : req.body}, (err : any) => {
+            dbTarget.updateOne({settingsName: "emailSettings"},{$set : req.body}, (err : any) => {
                 if (err) throw err;
                 res.status(200).json(msges.success)
             })
@@ -114,9 +114,9 @@ routerEmails.post("/send", (req, res) => {
  client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
-    const dbTarget = client.db(db).collection("emailSettings");
+    const dbTarget = client.db(db).collection("settings");
     try {
-      dbTarget.findOne({}, (err, data) => {
+      dbTarget.findOne({settingsName: "emailSettings"}, (err, data) => {
         if (err) throw err;
         const transporter = nodemailer.createTransport({
           service: "gmail",
