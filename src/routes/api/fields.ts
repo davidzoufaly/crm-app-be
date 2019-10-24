@@ -17,7 +17,7 @@ const routerFields = Router();
 
 const msges = {
   success: "Success",
-  error: "Error"
+  error: "Error",
 };
 
 //? Get All Fields
@@ -46,9 +46,11 @@ routerFields.get("/count", (req, res) => {
     console.log(err);
     const dbTarget = client.db(db).collection(collection);
     try {
-      dbTarget.countDocuments({}, (err, data) => {
+      dbTarget.find({}).toArray((err, data) => {
         if (err) throw err;
-        res.status(200).json({ data });
+        const permanent = data.filter(e => e.fieldPermanent).length;
+        const custom = data.filter(e => !e.fieldPermanent).length;
+        res.status(200).json({permanent, custom});
         client.close();
       });
     } catch (err) {
@@ -143,7 +145,7 @@ routerFields.put("/", (req, res) => {
         );
 
         res.status(200).json({ msg: msges.success });
-
+    
         client.close();
       } catch (err) {
         console.log(err);

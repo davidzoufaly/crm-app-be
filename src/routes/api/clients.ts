@@ -2,8 +2,6 @@ import { Router } from "express";
 import { MongoClient, ObjectId } from "mongodb";
 import moment from "moment";
 
-//TODO: Ondstranit alerty v consoli
-
 //? ATLAS CONNECTION
 // const username = "RW";
 // const password = "vjODZjlKTSIFKISV";
@@ -64,6 +62,37 @@ routerClients.delete("/", (req, res) => {
   });
 });
 
+//? Get from last week
+routerClients.get("/last-week", (_, res) => {
+
+  const today = new Date();
+  const todayTimeStamp = today.getTime();
+  const milsInWeek = 7*24*60*60*1000;
+
+  const timeStampWeekAgo = todayTimeStamp - milsInWeek;
+
+  client.connect((err, client) => {
+  if (err) throw err;
+  console.log(err);
+  const dbTarget = client.db(db).collection(collection);
+  try {
+    dbTarget.find({}).toArray((err, data) => {
+
+      const oneWeekOldClients = data.map((client : any) => {
+        return {...client, ["Date added"]:  new Date(client["Date added"]).getTime()}
+      }).filter(client => timeStampWeekAgo - client["Date added"] < 0).length;
+
+      if (err) throw err;
+      res.status(200).json(oneWeekOldClients);
+      client.close();
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ msg: msges.error });
+  }
+});
+});
+
 //? Number of clients
 routerClients.get("/count", (req, res) => {
   client.connect((err, client) => {
@@ -73,7 +102,7 @@ routerClients.get("/count", (req, res) => {
     try {
       dbTarget.countDocuments({}, (err, data) => {
         if (err) throw err;
-        res.status(200).json({ data });
+        res.status(200).json(data);
         client.close();
       });
     } catch (err) {

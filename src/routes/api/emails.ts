@@ -37,6 +37,25 @@ routerEmails.get("/", (_, res) => {
       }
     });
   });
+  
+//? Get Last campaign
+routerEmails.get("/last", (_, res) => {
+  client.connect((err, client) => {
+    if (err) throw err;
+    console.log(err);
+    const dbTarget = client.db(db).collection("emails");
+    try {
+      dbTarget.find({}).limit(1).sort({date: -1}).toArray((err, data) => {
+        if (err) throw err;
+        res.status(200).json(data);
+        client.close();
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(400).json({ msg: msges.error });
+    }
+  });
+});
 
   //? Get email settings
   routerEmails.get("/email-settings", (_, res) => {

@@ -3,11 +3,9 @@ import Logger from "./routes/middlewares/Logger";
 import Cors from "./routes/middlewares/Cors";
 import routerClients from "./routes/api/clients";
 import routerFields from "./routes/api/fields";
-import path from "path";
 import routerEmails from "./routes/api/emails";
-import fs from "fs";
-import generateForm from "./generateForm";
 import routerWebForm from "./routes/api/webform";
+import routerUsers from "./routes/api/Users";
 
 /*TODO: FIXNOUT .close() 
 the options [servers] is not supported
@@ -31,6 +29,7 @@ app.use("/api/clients", routerClients);
 app.use("/api/fields", routerFields);
 app.use("/api/emails", routerEmails);
 app.use("/api/webform", routerWebForm);
+app.use("/api/users", routerUsers);
 
 app.use(express.static('src/data'))
 app.use('/static', express.static('public'))

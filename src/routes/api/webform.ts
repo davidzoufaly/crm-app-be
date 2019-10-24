@@ -27,7 +27,7 @@ const msges = {
 
 //? Get form file
 routerWebForm.get("/", (_, res) => {
-  res.status(200).download('./src/data/crm-form.js')
+  res.status(200).download('./src/data/crm-form.js');
 })
 
 
