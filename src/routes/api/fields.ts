@@ -25,7 +25,7 @@ routerFields.get("/", (req, res) => {
   client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
-    const dbTarget = client.db(db).collection(collection);
+    const dbTarget = client.db(req.query.key).collection(collection);
     try {
       dbTarget.find({}).toArray((err, data) => {
         if (err) throw err;
@@ -44,7 +44,7 @@ routerFields.get("/count", (req, res) => {
   client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
-    const dbTarget = client.db(db).collection(collection);
+    const dbTarget = client.db(req.query.key).collection(collection);
     try {
       dbTarget.find({}).toArray((err, data) => {
         if (err) throw err;
@@ -66,7 +66,7 @@ routerFields.get("/:id", (req, res) => {
   client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
-    const dbTarget = client.db(db).collection(collection);
+    const dbTarget = client.db(req.query.key).collection(collection);
     try {
       dbTarget.findOne({ _id: new ObjectId(id) }, (err, data) => {
         if (err) throw err;
@@ -90,7 +90,7 @@ routerFields.post("/", (req, res) => {
   client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
-    const dbTarget = client.db(db).collection(collection);
+    const dbTarget = client.db(req.query.key).collection(collection);
     try {
       dbTarget.insertOne(fieldObject);
       res.status(200).json({ msg: msges.success });
@@ -104,17 +104,11 @@ routerFields.post("/", (req, res) => {
 
 //? Update multiple fields
 //? generate crm-form.js on BE
-//? download it on FE if query download is true
 routerFields.put("/", (req, res) => {
-
-  fs.writeFile("./src/data/crm-form.js", generateForm(req.body), function(err) {
-    if (err) throw err;
-    console.log("form generated");
-
     client.connect((err, client) => {
       if (err) throw err;
       console.log(err);
-      const dbTarget = client.db(db).collection(collection);
+      const dbTarget = client.db(req.query.key).collection(collection);
       try {
         req.body.forEach(
           ({
@@ -143,9 +137,7 @@ routerFields.put("/", (req, res) => {
             );
           }
         );
-
         res.status(200).json({ msg: msges.success });
-    
         client.close();
       } catch (err) {
         console.log(err);
@@ -153,7 +145,6 @@ routerFields.put("/", (req, res) => {
       }
     });
   });
-});
 
 //? Update Field
 routerFields.put("/:id", (req, res) => {
@@ -162,7 +153,7 @@ routerFields.put("/:id", (req, res) => {
   client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
-    const dbTarget = client.db(db).collection(collection);
+    const dbTarget = client.db(req.query.key).collection(collection);
     try {
       dbTarget.updateOne({ _id: new ObjectId(id) }, { $set: req.body });
       res.status(200).json({ msg: msges.success });
@@ -181,7 +172,7 @@ routerFields.delete("/:id", (req, res) => {
   client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
-    const dbTarget = client.db(db).collection(collection);
+    const dbTarget = client.db(req.query.key).collection(collection);
     try {
       dbTarget.deleteOne({ _id: new ObjectId(id) });
       res.status(200).json({ msg: msges.success });

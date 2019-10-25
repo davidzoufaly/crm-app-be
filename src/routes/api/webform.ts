@@ -1,8 +1,7 @@
 import { Router } from "express";
-import { MongoClient, ObjectId } from "mongodb";
-import moment from "moment";
-
-//! NOT USED IN APP YET
+import { MongoClient } from "mongodb";
+import fs from "fs";
+import generateForm from "../../generateForm";
 
 //? ATLAS CONNECTION
 // const username = "RW";
@@ -25,13 +24,26 @@ const msges = {
 };
 
 
-//? Get form file
-routerWebForm.get("/", (_, res) => {
-  res.status(200).download('./src/data/crm-form.js');
+//? Generate form and download it
+routerWebForm.get("/", (req, res) => {
+  client.connect((err, client) => {
+    const dbTarget = client.db(req.query.key).collection("fields")
+    try {
+      dbTarget.find({}).toArray((err, data) => {
+        fs.writeFile(`./src/data/crm-form-${req.query.key}.js`, generateForm(data), function(err) {
+          res.status(200).download(`./src/data/crm-form-${req.query.key}.js`);
+          client.close();
+        })
+      })
+    } catch(err) {
+      console.log(err);
+      res.status(400).json({msg: msges.error})
+    }
+  })
 })
 
 
-//? Update WebForm settings - not used yet
+//? NOT USED - Update WebForm settings
 // routerWebForm.put("/", (req, res) => {
 //   client.connect((err, client) => {
 //     if (err) throw err;

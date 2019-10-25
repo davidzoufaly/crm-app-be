@@ -20,11 +20,11 @@ const msges = {
 };
 
 //? Get All Emails
-routerEmails.get("/", (_, res) => {
+routerEmails.get("/", (req, res) => {
     client.connect((err, client) => {
       if (err) throw err;
       console.log(err);
-      const dbTarget = client.db(db).collection("emails");
+      const dbTarget = client.db(req.query.key).collection("emails");
       try {
         dbTarget.find({}).toArray((err, data) => {
           if (err) throw err;
@@ -39,11 +39,11 @@ routerEmails.get("/", (_, res) => {
   });
   
 //? Get Last campaign
-routerEmails.get("/last", (_, res) => {
+routerEmails.get("/last", (req, res) => {
   client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
-    const dbTarget = client.db(db).collection("emails");
+    const dbTarget = client.db(req.query.key).collection("emails");
     try {
       dbTarget.find({}).limit(1).sort({date: -1}).toArray((err, data) => {
         if (err) throw err;
@@ -58,11 +58,11 @@ routerEmails.get("/last", (_, res) => {
 });
 
   //? Get email settings
-  routerEmails.get("/email-settings", (_, res) => {
+  routerEmails.get("/email-settings", (req, res) => {
     client.connect((err, client) => {
       if (err) throw err;
       console.log(err);
-      const dbTarget = client.db(db).collection("settings");
+      const dbTarget = client.db(req.query.key).collection("settings");
       try {
         dbTarget.findOne({settingsName : "emailSettings"}, (err, data) => {
           if (err) throw err;
@@ -77,11 +77,11 @@ routerEmails.get("/last", (_, res) => {
   });
 
 //? Number of emails
-routerEmails.get("/count", (_, res) => {
+routerEmails.get("/count", (req, res) => {
   client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
-    const dbTarget = client.db(db).collection("emails");
+    const dbTarget = client.db(req.query.key).collection("emails");
     try {
       dbTarget.countDocuments({}, (err, data) => {
         if (err) throw err;
@@ -101,7 +101,7 @@ routerEmails.post("/" , (req, res) => {
         if (err) throw err;
         console.log(err);
 
-        const dbTarget = client.db(db).collection("settings");
+        const dbTarget = client.db(req.query.key).collection("settings");
         try {
             dbTarget.updateOne({settingsName: "emailSettings"},{$set : req.body}, (err : any) => {
                 if (err) throw err;
@@ -122,7 +122,7 @@ routerEmails.post("/send", (req, res) => {
  client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
-    const dbTarget = client.db(db).collection("emails");
+    const dbTarget = client.db(req.query.key).collection("emails");
     try {
       dbTarget.insertOne(email);
     } catch (err) {
@@ -133,7 +133,7 @@ routerEmails.post("/send", (req, res) => {
  client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
-    const dbTarget = client.db(db).collection("settings");
+    const dbTarget = client.db(req.query.key).collection("settings");
     try {
       dbTarget.findOne({settingsName: "emailSettings"}, (err, data) => {
         if (err) throw err;

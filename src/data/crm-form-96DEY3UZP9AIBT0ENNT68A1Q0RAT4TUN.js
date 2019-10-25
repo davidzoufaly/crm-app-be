@@ -35,13 +35,7 @@
             var node1 = document.createTextNode('Last name');
             label1.appendChild(node1);
             inputWrapper1.appendChild(label1);
-            inputWrapper1.appendChild(crmInput1);var input7 = document.createElement('INPUT');
-                    input7.setAttribute('type', 'hidden');
-                    input7.setAttribute('name', 'Zdroj');
-                    input7.setAttribute('class', 'crm-form-data');
-                    input7.setAttribute('id', 'zdroj');
-                    input7.setAttribute('value', 'form');
-                    form.appendChild(input7);
+            inputWrapper1.appendChild(crmInput1)
     var submitButton = document.createElement('BUTTON');
     var submitButtonText = document.createTextNode('Submit');
     submitButton.appendChild(submitButtonText);

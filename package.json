@@ -17,6 +17,7 @@
     "@types/nodemailer": "^6.2.1",
     "@types/request": "^2.48.3",
     "express": "^4.17.1",
+    "generate-unique-id": "^2.0.0",
     "moment": "^2.24.0",
     "mongodb": "^3.3.2",
     "nodemailer": "^6.3.1",

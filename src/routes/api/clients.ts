@@ -14,7 +14,7 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
   useNewUrlParser: true
 });
-const db = "crm-app";
+
 const collection = "clients";
 const routerClients = Router();
 const msges = {
@@ -23,11 +23,12 @@ const msges = {
 };
 
 //? Get All Clients
-routerClients.get("/", (_, res) => {
+routerClients.get("/", (req, res) => {
+  console.log(req.query);
     client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
-    const dbTarget = client.db(db).collection(collection);
+    const dbTarget = client.db(req.query.key).collection(collection);
     try {
       dbTarget.find({}).toArray((err, data) => {
         if (err) throw err;
@@ -48,7 +49,7 @@ routerClients.delete("/", (req, res) => {
   client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
-    const dbTarget = client.db(db).collection(collection);
+    const dbTarget = client.db(req.query.key).collection(collection);
     try {
       dbTarget.deleteMany({ _id: { $in: ids } }, err => {
         if (err) throw err;
@@ -63,7 +64,7 @@ routerClients.delete("/", (req, res) => {
 });
 
 //? Get from last week
-routerClients.get("/last-week", (_, res) => {
+routerClients.get("/last-week", (req, res) => {
 
   const today = new Date();
   const todayTimeStamp = today.getTime();
@@ -74,7 +75,7 @@ routerClients.get("/last-week", (_, res) => {
   client.connect((err, client) => {
   if (err) throw err;
   console.log(err);
-  const dbTarget = client.db(db).collection(collection);
+  const dbTarget = client.db(req.query.key).collection(collection);
   try {
     dbTarget.find({}).toArray((err, data) => {
 
@@ -98,7 +99,7 @@ routerClients.get("/count", (req, res) => {
   client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
-    const dbTarget = client.db(db).collection(collection);
+    const dbTarget = client.db(req.query.key).collection(collection);
     try {
       dbTarget.countDocuments({}, (err, data) => {
         if (err) throw err;
@@ -113,14 +114,14 @@ routerClients.get("/count", (req, res) => {
 });
 
 //? Get Single Client
-routerClients.get("/:id", (req, res) => {
-  const id = req.params.id;
+routerClients.get("/:key/:id", (req, res) => {
+  console.log(req.params);
   client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
-    const dbTarget = client.db(db).collection(collection);
+    const dbTarget = client.db(req.params.key).collection(collection);
     try {
-      dbTarget.findOne({ _id: new ObjectId(id) }, (err, data) => {
+      dbTarget.findOne({ _id: new ObjectId(req.params.id) }, (err, data) => {
         if (err) throw err;
         res.status(200).json(data);
       });
@@ -135,13 +136,14 @@ routerClients.get("/:id", (req, res) => {
 //? Create Client
 routerClients.post("/", (req, res) => {
   let reqObject = req.body;
+  console.log(req.query.key);
   reqObject["Date added"] = moment().format('llll')
   reqObject._id = new ObjectId(reqObject._id);
 
   client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
-    const dbTarget = client.db(db).collection(collection);
+    const dbTarget = client.db(req.query.key).collection(collection);
     try {
       dbTarget.insertOne(reqObject);
       res.status(200).json({ msg: msges.success });
@@ -154,8 +156,9 @@ routerClients.post("/", (req, res) => {
 });
 
 //? Update Client
-routerClients.put("/:id", (req, res) => {
+routerClients.put("/:key/:id", (req, res) => {
   const id = req.params.id;
+  console.log(req.params);
 
   let reqObject = req.body;
   // remove id from req -> cant be passed to DB
@@ -164,7 +167,7 @@ routerClients.put("/:id", (req, res) => {
   client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
-    const dbTarget = client.db(db).collection(collection);
+    const dbTarget = client.db(req.params.key).collection(collection);
     try {
       dbTarget.updateOne({ _id: new ObjectId(id) }, { $set: reqObject });
       res.status(200).json({ msg: msges.success });
@@ -177,13 +180,14 @@ routerClients.put("/:id", (req, res) => {
 });
 
 //? Client delete
-routerClients.delete("/:id", (req, res) => {
+routerClients.delete("/:key/:id", (req, res) => {
   const id = req.params.id;
+  console.log(req.params);
 
   client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
-    const dbTarget = client.db(db).collection(collection);
+    const dbTarget = client.db(req.params.key).collection(collection);
     try {
       dbTarget.deleteOne({ _id: new ObjectId(id) });
       res.status(200).json({ msg: msges.success });
