@@ -5,4 +5,4 @@ const msges = {
     exist: "Exist"
 };
 
-export default msges;
+module.exports = msges;

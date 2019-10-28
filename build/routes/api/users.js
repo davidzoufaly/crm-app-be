@@ -1,23 +1,20 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const generate_unique_id_1 = __importDefault(require("generate-unique-id"));
-const msges_1 = __importDefault(require("../assets/msges"));
-const client_1 = __importDefault(require("../assets/client"));
+const express = require("express");
+const routerUsers = express.Router();
+const msges = require("../assets/msges");
+const client = require("../assets/client");
+const generateUniqueId = require("generate-unique-id");
 const db = "users";
 const collection = "users";
-const routerUsers = express_1.Router();
 //? Register user and create him DB
 routerUsers.post("/", (req, res) => {
     let user = req.body;
     user["Date Added"] = new Date();
-    user.Api_KEY = generate_unique_id_1.default({
+    user.Api_KEY = generateUniqueId({
         length: 32
     }).toUpperCase();
-    client_1.default.connect((err, client) => {
+    client.connect((err, client) => {
         if (err)
             throw err;
         console.log(err);
@@ -82,27 +79,27 @@ routerUsers.post("/", (req, res) => {
                         dbTarget.collection("fields").insertMany(defaultFields)
                     ])
                         .then(() => {
-                        res.status(200).json({ msg: msges_1.default.success });
+                        res.status(200).json({ msg: msges.success });
                     })
                         .catch(reason => {
                         console.log(reason);
-                        res.status(400).send({ msg: msges_1.default.error });
+                        res.status(400).send({ msg: msges.error });
                     });
                 }
                 else {
-                    res.status(200).json({ msg: msges_1.default.exist });
+                    res.status(200).json({ msg: msges.exist });
                 }
             });
         }
         catch (err) {
             console.log(err);
-            res.status(400).json({ msg: msges_1.default.error });
+            res.status(400).json({ msg: msges.error });
         }
     });
 });
 //? Login user
 routerUsers.post("/authenticate-user", (req, res) => {
-    client_1.default.connect((err, client) => {
+    client.connect((err, client) => {
         if (err)
             throw err;
         console.log(err);
@@ -110,10 +107,10 @@ routerUsers.post("/authenticate-user", (req, res) => {
         try {
             dbTarget.findOne({ username: req.body.username }, (err, data) => {
                 data === null
-                    ? res.status(200).json({ msg: msges_1.default.error })
+                    ? res.status(200).json({ msg: msges.error })
                     : data.password === req.body.password
-                        ? res.status(200).json({ msg: msges_1.default.success, key: data.Api_KEY })
-                        : res.status(200).json({ msg: msges_1.default.error });
+                        ? res.status(200).json({ msg: msges.success, key: data.Api_KEY })
+                        : res.status(200).json({ msg: msges.error });
                 if (err)
                     throw err;
             });
@@ -121,8 +118,8 @@ routerUsers.post("/authenticate-user", (req, res) => {
         }
         catch (err) {
             console.log(err);
-            res.status(400).json({ msg: msges_1.default.error });
+            res.status(400).json({ msg: msges.error });
         }
     });
 });
-exports.default = routerUsers;
+module.exports = routerUsers;

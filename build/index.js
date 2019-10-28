@@ -1,31 +1,28 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const Logger_1 = __importDefault(require("./routes/middlewares/Logger"));
-const Cors_1 = __importDefault(require("./routes/middlewares/Cors"));
-const clients_1 = __importDefault(require("./routes/api/clients"));
-const fields_1 = __importDefault(require("./routes/api/fields"));
-const emails_1 = __importDefault(require("./routes/api/emails"));
-const webform_1 = __importDefault(require("./routes/api/webform"));
-const users_1 = __importDefault(require("./routes/api/users"));
-const app = express_1.default();
+exports.express = require("express");
+const Logger = require("./routes/middlewares/Logger");
+const Cors = require("./routes/middlewares/Cors");
+const routerClients = require("./routes/api/clients");
+const routerFields = require("./routes/api/fields");
+const routerEmails = require("./routes/api/emails");
+const routerWebForm = require("./routes/api/webform");
+const routerUsers = require("./routes/api/users");
+const app = exports.express();
 // Init middleware
-app.use(Logger_1.default);
-app.use(Cors_1.default);
+app.use(Logger);
+app.use(Cors);
 // Body Preser Middleware
-app.use(express_1.default.json());
-app.use(express_1.default.urlencoded({ extended: false }));
+app.use(exports.express.json());
+app.use(exports.express.urlencoded({ extended: false }));
 // API Clients
-app.use("/api/clients", clients_1.default);
-app.use("/api/fields", fields_1.default);
-app.use("/api/emails", emails_1.default);
-app.use("/api/webform", webform_1.default);
-app.use("/api/users", users_1.default);
-app.use(express_1.default.static('src/data'));
-app.use('/static', express_1.default.static('public'));
+app.use("/api/clients", routerClients);
+app.use("/api/fields", routerFields);
+app.use("/api/emails", routerEmails);
+app.use("/api/webform", routerWebForm);
+app.use("/api/users", routerUsers);
+app.use(exports.express.static('src/data'));
+app.use('/static', exports.express.static('public'));
 app.get("/", (req, res) => {
     res.send("This is backend of lightweight CRM-APP");
 });

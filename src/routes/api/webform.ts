@@ -1,10 +1,10 @@
-import { Router } from "express";
-import fs from "fs";
-import generateForm from "../../generateForm";
-import msges from "../assets/msges";
-import client from "../assets/client";
-
-const routerWebForm = Router();
+export {}
+const express = require("express");
+const routerWebForm = express.Router();
+const fs = require("fs");
+const msges = require("../assets/msges");
+const client = require("../assets/client");
+const generateForm = require("../../generateForm");
 
 //? Generate form and download it
 routerWebForm.get("/", (req, res) => {
@@ -44,4 +44,4 @@ routerWebForm.get("/", (req, res) => {
 //   });
 // });
 
-export default routerWebForm;
+module.exports = routerWebForm;

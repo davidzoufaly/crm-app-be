@@ -156,4 +156,4 @@ const generateForm = (req: any) => {
   return finalStr;
 };
 
-export default generateForm;
+module.exports = generateForm;

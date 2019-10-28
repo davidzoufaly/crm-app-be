@@ -1,11 +1,12 @@
-import { Router } from "express";
-import generateUniqueId from "generate-unique-id";
-import msges from "../assets/msges";
-import client from "../assets/client";
+export {};
+const express = require("express");
+const routerUsers = express.Router();
+const msges = require("../assets/msges");
+const client = require("../assets/client");
+const generateUniqueId = require("generate-unique-id");
 
 const db = "users";
 const collection = "users";
-const routerUsers = Router();
 
 //? Register user and create him DB
 routerUsers.post("/", (req, res) => {
@@ -127,4 +128,4 @@ routerUsers.post("/authenticate-user", (req, res) => {
   });
 });
 
-export default routerUsers;
+module.exports = routerUsers;

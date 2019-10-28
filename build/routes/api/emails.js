@@ -1,17 +1,14 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const nodemailer_1 = __importDefault(require("nodemailer"));
-const express_1 = require("express");
-const moment_1 = __importDefault(require("moment"));
-const msges_1 = __importDefault(require("../assets/msges"));
-const client_1 = __importDefault(require("../assets/client"));
-const routerEmails = express_1.Router();
+const nodemailer = require("nodemailer");
+const express = require("express");
+const routerEmails = express.Router();
+const moment = require("moment");
+const msges = require("../assets/msges");
+const client = require("../assets/client");
 //? Get All Emails
 routerEmails.get("/", (req, res) => {
-    client_1.default.connect((err, client) => {
+    client.connect((err, client) => {
         if (err)
             throw err;
         console.log(err);
@@ -26,13 +23,13 @@ routerEmails.get("/", (req, res) => {
         }
         catch (err) {
             console.log(err);
-            res.status(400).json({ msg: msges_1.default.error });
+            res.status(400).json({ msg: msges.error });
         }
     });
 });
 //? Get Last campaign
 routerEmails.get("/last", (req, res) => {
-    client_1.default.connect((err, client) => {
+    client.connect((err, client) => {
         if (err)
             throw err;
         console.log(err);
@@ -47,13 +44,13 @@ routerEmails.get("/last", (req, res) => {
         }
         catch (err) {
             console.log(err);
-            res.status(400).json({ msg: msges_1.default.error });
+            res.status(400).json({ msg: msges.error });
         }
     });
 });
 //? Get email settings
 routerEmails.get("/email-settings", (req, res) => {
-    client_1.default.connect((err, client) => {
+    client.connect((err, client) => {
         if (err)
             throw err;
         console.log(err);
@@ -68,13 +65,13 @@ routerEmails.get("/email-settings", (req, res) => {
         }
         catch (err) {
             console.log(err);
-            res.status(400).json({ msg: msges_1.default.error });
+            res.status(400).json({ msg: msges.error });
         }
     });
 });
 //? Number of emails
 routerEmails.get("/count", (req, res) => {
-    client_1.default.connect((err, client) => {
+    client.connect((err, client) => {
         if (err)
             throw err;
         console.log(err);
@@ -89,13 +86,13 @@ routerEmails.get("/count", (req, res) => {
         }
         catch (err) {
             console.log(err);
-            res.status(400).json({ msg: msges_1.default.error });
+            res.status(400).json({ msg: msges.error });
         }
     });
 });
 //? Save email settings
 routerEmails.post("/", (req, res) => {
-    client_1.default.connect((err, client) => {
+    client.connect((err, client) => {
         if (err)
             throw err;
         console.log(err);
@@ -104,7 +101,7 @@ routerEmails.post("/", (req, res) => {
             dbTarget.updateOne({ settingsName: "emailSettings" }, { $set: req.body }, (err) => {
                 if (err)
                     throw err;
-                res.status(200).json(msges_1.default.success);
+                res.status(200).json(msges.success);
             });
         }
         catch (err) {
@@ -115,8 +112,8 @@ routerEmails.post("/", (req, res) => {
 //? Save and send Email
 routerEmails.post("/send", (req, res) => {
     const email = req.body;
-    email.date = moment_1.default().format("llll");
-    client_1.default.connect((err, client) => {
+    email.date = moment().format("llll");
+    client.connect((err, client) => {
         if (err)
             throw err;
         console.log(err);
@@ -126,7 +123,7 @@ routerEmails.post("/send", (req, res) => {
                 if (err)
                     throw err;
                 if (data.username.includes("@") && data.pass.length !== 0) {
-                    const transporter = nodemailer_1.default.createTransport({
+                    const transporter = nodemailer.createTransport({
                         service: "gmail",
                         auth: {
                             user: data.username,
@@ -145,7 +142,7 @@ routerEmails.post("/send", (req, res) => {
                             throw error;
                         }
                         else {
-                            res.status(200).json(msges_1.default.success);
+                            res.status(200).json(msges.success);
                             console.log("Email sent: " + info.response);
                             client.connect((err, client) => {
                                 if (err)
@@ -170,8 +167,8 @@ routerEmails.post("/send", (req, res) => {
         }
         catch (err) {
             console.log(err);
-            res.status(403).json(msges_1.default.error);
+            res.status(403).json(msges.error);
         }
     });
 });
-exports.default = routerEmails;
+module.exports = routerEmails;

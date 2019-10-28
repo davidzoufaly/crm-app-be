@@ -1,10 +1,11 @@
-import nodemailer from "nodemailer";
-import { Router } from "express";
-import moment from "moment";
-import msges from "../assets/msges";
-import client from "../assets/client";
+export {};
+const nodemailer = require("nodemailer")
+const express = require("express");
+const routerEmails = express.Router();
+const moment = require("moment");
+const msges = require("../assets/msges");
+const client = require("../assets/client");
 
-const routerEmails = Router();
 
 //? Get All Emails
 routerEmails.get("/", (req, res) => {
@@ -161,4 +162,4 @@ routerEmails.post("/send", (req, res) => {
   });
 });
 
-export default routerEmails;
+module.exports = routerEmails;

@@ -1,13 +1,14 @@
-import express from "express";
-import Logger from "./routes/middlewares/Logger";
-import Cors from "./routes/middlewares/Cors";
-import routerClients from "./routes/api/clients";
-import routerFields from "./routes/api/fields";
-import routerEmails from "./routes/api/emails";
-import routerWebForm from "./routes/api/webform";
-import routerUsers from "./routes/api/users";
+export {}
+const express = require("express");
+const Logger = require("./routes/middlewares/Logger");
+const Cors = require("./routes/middlewares/Cors");
+const routerClients = require("./routes/api/clients");
+const routerFields = require("./routes/api/fields");
+const routerEmails = require("./routes/api/emails");
+const routerWebForm = require("./routes/api/webform");
+const routerUsers = require("./routes/api/users");
 
-const app = express();
+const app = express()
 
 // Init middleware
 app.use(Logger);

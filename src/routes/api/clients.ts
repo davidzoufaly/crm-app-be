@@ -1,16 +1,14 @@
-import { Router } from "express";
-import { ObjectId } from "mongodb";
-import moment from "moment";
-import msges from "../assets/msges";
-import client from "../assets/client";
 
-//? ATLAS CONNECTION
-// const username = "RW";
-// const password = "vjODZjlKTSIFKISV";
-// const uri = `mongodb+srv://${username}:${password}@cluster0-g9fj3.mongodb.net/admin?retryWrites=true&w=majority`;
+export
+const express = require("express");
+const routerClients = express.Router();
+const mongodb = require("mongodb");
+const ObjectId = mongodb.ObjectId;
+const moment = require("moment");
+const msges = require("../assets/msges");
+const client = require("../assets/client");
 
 const collection = "clients";
-const routerClients = Router();
 
 //? Get All Clients
 routerClients.get("/", (req, res) => {
@@ -188,4 +186,4 @@ routerClients.delete("/:key/:id", (req, res) => {
   });
 });
 
-export default routerClients;
+module.exports = routerClients;

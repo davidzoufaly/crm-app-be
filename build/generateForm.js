@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const generateForm = (req) => {
     const inputs = [];
     req.map((e, i) => {
@@ -141,4 +139,4 @@ const generateForm = (req) => {
     `;
     return finalStr;
 };
-exports.default = generateForm;
+module.exports = generateForm;

@@ -1,9 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
-import moment from "moment";
+const moment = require("moment");
 
-const Logger = (req : Request, res : Response, next : NextFunction) => {
+const Logger = (req, _, next) => {
     console.log(`Logger se hlásí: ${req.protocol}://${req.get('host')}${req.originalUrl} metoda: ${req.method} ${moment().format()}`);
     next();
 } 
 
-export default Logger;
+module.exports = Logger;

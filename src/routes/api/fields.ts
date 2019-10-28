@@ -1,11 +1,13 @@
-import { Router } from "express";
-import { ObjectId } from "mongodb";
-import moment from "moment";
-import msges from "../assets/msges";
-import client from "../assets/client";
+export {};
+const mongodb = require("mongodb");
+const ObjectId = mongodb.ObjectId;
+const express = require("express");
+const routerFields = express.Router();
+const moment = require("moment");
+const msges = require("../assets/msges");
+const client = require("../assets/client");
 
 const collection = "fields";
-const routerFields = Router();
 
 //? Get All Fields
 routerFields.get("/", (req, res) => {
@@ -172,4 +174,4 @@ routerFields.delete("/:id", (req, res) => {
   });
 });
 
-export default routerFields;
+module.exports = routerFields;

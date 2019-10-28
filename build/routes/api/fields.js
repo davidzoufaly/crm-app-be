@@ -1,18 +1,16 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const mongodb_1 = require("mongodb");
-const moment_1 = __importDefault(require("moment"));
-const msges_1 = __importDefault(require("../assets/msges"));
-const client_1 = __importDefault(require("../assets/client"));
+const mongodb = require("mongodb");
+const ObjectId = mongodb.ObjectId;
+const express = require("express");
+const routerFields = express.Router();
+const moment = require("moment");
+const msges = require("../assets/msges");
+const client = require("../assets/client");
 const collection = "fields";
-const routerFields = express_1.Router();
 //? Get All Fields
 routerFields.get("/", (req, res) => {
-    client_1.default.connect((err, client) => {
+    client.connect((err, client) => {
         if (err)
             throw err;
         console.log(err);
@@ -27,13 +25,13 @@ routerFields.get("/", (req, res) => {
         }
         catch (err) {
             console.log(err);
-            res.status(400).json({ msg: msges_1.default.error });
+            res.status(400).json({ msg: msges.error });
         }
     });
 });
 //? Number of fields
 routerFields.get("/count", (req, res) => {
-    client_1.default.connect((err, client) => {
+    client.connect((err, client) => {
         if (err)
             throw err;
         console.log(err);
@@ -50,20 +48,20 @@ routerFields.get("/count", (req, res) => {
         }
         catch (err) {
             console.log(err);
-            res.status(400).json({ msg: msges_1.default.error });
+            res.status(400).json({ msg: msges.error });
         }
     });
 });
 //? Get Single Field
 routerFields.get("/:id", (req, res) => {
     const id = req.params.id;
-    client_1.default.connect((err, client) => {
+    client.connect((err, client) => {
         if (err)
             throw err;
         console.log(err);
         const dbTarget = client.db(req.query.key).collection(collection);
         try {
-            dbTarget.findOne({ _id: new mongodb_1.ObjectId(id) }, (err, data) => {
+            dbTarget.findOne({ _id: new ObjectId(id) }, (err, data) => {
                 if (err)
                     throw err;
                 res.status(200).json(data);
@@ -73,7 +71,7 @@ routerFields.get("/:id", (req, res) => {
         }
         catch (err) {
             console.log(err);
-            res.status(400).json({ msg: msges_1.default.error });
+            res.status(400).json({ msg: msges.error });
         }
     });
 });
@@ -81,35 +79,35 @@ routerFields.get("/:id", (req, res) => {
 routerFields.post("/", (req, res) => {
     let fieldObject = req.body;
     fieldObject.fieldPermanent = false;
-    fieldObject._id = new mongodb_1.ObjectId(fieldObject._id);
-    fieldObject.dateAdded = moment_1.default().format("llll");
-    client_1.default.connect((err, client) => {
+    fieldObject._id = new ObjectId(fieldObject._id);
+    fieldObject.dateAdded = moment().format("llll");
+    client.connect((err, client) => {
         if (err)
             throw err;
         console.log(err);
         const dbTarget = client.db(req.query.key).collection(collection);
         try {
             dbTarget.insertOne(fieldObject);
-            res.status(200).json({ msg: msges_1.default.success });
+            res.status(200).json({ msg: msges.success });
             client.close();
         }
         catch (err) {
             console.log(err);
-            res.status(400).json({ msg: msges_1.default.error });
+            res.status(400).json({ msg: msges.error });
         }
     });
 });
 //? Update multiple fields
 //? generate crm-form.js on BE
 routerFields.put("/", (req, res) => {
-    client_1.default.connect((err, client) => {
+    client.connect((err, client) => {
         if (err)
             throw err;
         console.log(err);
         const dbTarget = client.db(req.query.key).collection(collection);
         try {
             req.body.forEach(({ _id, fieldName, fieldType, fieldPermanent, fieldOptions, fieldInForm, fieldFormVisible, order }) => {
-                dbTarget.updateOne({ _id: new mongodb_1.ObjectId(_id) }, {
+                dbTarget.updateOne({ _id: new ObjectId(_id) }, {
                     $set: {
                         fieldName,
                         fieldType,
@@ -121,51 +119,51 @@ routerFields.put("/", (req, res) => {
                     }
                 });
             });
-            res.status(200).json({ msg: msges_1.default.success });
+            res.status(200).json({ msg: msges.success });
             client.close();
         }
         catch (err) {
             console.log(err);
-            res.status(400).json({ msg: msges_1.default.error });
+            res.status(400).json({ msg: msges.error });
         }
     });
 });
 //? Update Field
 routerFields.put("/:id", (req, res) => {
     const id = req.params.id;
-    client_1.default.connect((err, client) => {
+    client.connect((err, client) => {
         if (err)
             throw err;
         console.log(err);
         const dbTarget = client.db(req.query.key).collection(collection);
         try {
-            dbTarget.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: req.body });
-            res.status(200).json({ msg: msges_1.default.success });
+            dbTarget.updateOne({ _id: new ObjectId(id) }, { $set: req.body });
+            res.status(200).json({ msg: msges.success });
             client.close();
         }
         catch (err) {
             console.log(err);
-            res.status(400).json({ msg: msges_1.default.error });
+            res.status(400).json({ msg: msges.error });
         }
     });
 });
 //? Delete Field
 routerFields.delete("/:id", (req, res) => {
     const id = req.params.id;
-    client_1.default.connect((err, client) => {
+    client.connect((err, client) => {
         if (err)
             throw err;
         console.log(err);
         const dbTarget = client.db(req.query.key).collection(collection);
         try {
-            dbTarget.deleteOne({ _id: new mongodb_1.ObjectId(id) });
-            res.status(200).json({ msg: msges_1.default.success });
+            dbTarget.deleteOne({ _id: new ObjectId(id) });
+            res.status(200).json({ msg: msges.success });
             client.close();
         }
         catch (err) {
             console.log(err);
-            res.status(400).json({ msg: msges_1.default.error });
+            res.status(400).json({ msg: msges.error });
         }
     });
 });
-exports.default = routerFields;
+module.exports = routerFields;

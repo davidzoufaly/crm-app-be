@@ -1,6 +1,4 @@
-import { Request, Response, NextFunction } from "express";
-
-const Cors = (req: Request, res: Response, next: NextFunction) => {
+const Cors = (_, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
@@ -11,4 +9,4 @@ const Cors = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-export default Cors;
+module.exports = Cors;

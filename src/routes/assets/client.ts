@@ -1,4 +1,5 @@
-import { MongoClient } from "mongodb";
+const mongodb = require("mongodb");
+const MongoClient = mongodb.MongoClient;
 require('dotenv').config()
 
 //? ATLAS CONNECTION
@@ -9,4 +10,4 @@ const client = new MongoClient(process.env.LOCALHOST, {
   useNewUrlParser: true
 });
 
-export default client;
+module.exports = client;
