@@ -4,6 +4,7 @@
   "description": "",
   "main": "src/server.ts",
   "scripts": {
+    "start": ".",
     "build": "tsc -p .",
     "dev": "ts-node-dev --respawn --transpileOnly .",
     "prod": "tsc && node ."
