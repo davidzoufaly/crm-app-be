@@ -31,6 +31,7 @@ routerClients.get("/", (req, res) => {
     const dbTarget = client.db(req.query.key).collection(collection);
     try {
       dbTarget.find({}).toArray((err, data) => {
+        console.log(data);
         if (err) throw err;
         res.status(200).json(data);
         client.close();
@@ -78,7 +79,6 @@ routerClients.get("/last-week", (req, res) => {
   const dbTarget = client.db(req.query.key).collection(collection);
   try {
     dbTarget.find({}).toArray((err, data) => {
-
       const oneWeekOldClients = data.map((client : any) => {
         return {...client, ["Date added"]:  new Date(client["Date added"]).getTime()}
       }).filter(client => timeStampWeekAgo - client["Date added"] < 0).length;
@@ -136,7 +136,6 @@ routerClients.get("/:key/:id", (req, res) => {
 //? Create Client
 routerClients.post("/", (req, res) => {
   let reqObject = req.body;
-  console.log(req.query.key);
   reqObject["Date added"] = moment().format('llll')
   reqObject._id = new ObjectId(reqObject._id);
 

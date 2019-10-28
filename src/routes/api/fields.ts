@@ -81,10 +81,11 @@ routerFields.get("/:id", (req, res) => {
   });
 });
 
-//? Save Field
+//? Create Field
 routerFields.post("/", (req, res) => {
   let fieldObject = req.body;
   fieldObject.fieldPermanent = false;
+  fieldObject._id = new ObjectId(fieldObject._id);
   fieldObject.dateAdded = moment().format("llll");
 
   client.connect((err, client) => {

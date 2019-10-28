@@ -11,12 +11,12 @@ const client = new MongoClient(uri, {
   useNewUrlParser: true,
    
 });
-const db = "crm-app";
 const routerEmails = Router();
 
 const msges = {
   success: "Success",
-  error: "Error"
+  error: "Error",
+  credentialsNotSet: "Setup your email settings first"
 };
 
 //? Get All Emails
@@ -122,48 +122,54 @@ routerEmails.post("/send", (req, res) => {
  client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
-    const dbTarget = client.db(req.query.key).collection("emails");
-    try {
-      dbTarget.insertOne(email);
-    } catch (err) {
-      console.log(err);
-    }
-  });
-
- client.connect((err, client) => {
-    if (err) throw err;
-    console.log(err);
     const dbTarget = client.db(req.query.key).collection("settings");
     try {
       dbTarget.findOne({settingsName: "emailSettings"}, (err, data) => {
         if (err) throw err;
-        const transporter = nodemailer.createTransport({
-          service: "gmail",
-          auth: {
-            user: data.username,
-            pass: data.pass
-          }
-        });
 
-        const mailOptions = {
-          from: data.username,
-          to: email.to,
-          subject: email.subject,
-          text: email.message
-        };
-        transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-            throw error;
-          } else {
-              res.status(200).json({msg: msges.success});
-              console.log("Email sent: " + info.response);
-          }
-        });
+        if (data.username.includes("@") && data.pass.length !== 0) {
+          const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+              user: data.username,
+              pass: data.pass
+            }
+          });
+  
+          const mailOptions = {
+            from: data.username,
+            to: email.to,
+            subject: email.subject,
+            text: email.message
+          };
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.log(error);
+              throw error;
+            } else {
+                res.status(200).json(msges.success);
+                console.log("Email sent: " + info.response);
+  
+                client.connect((err, client) => {
+                  if (err) throw err;
+                  console.log(err);
+                  const dbTarget = client.db(req.query.key).collection("emails");
+                  try {
+                    dbTarget.insertOne(email);
+                  } catch (err) {
+                    console.log(err);
+                  }
+                });
+            }
+          });
+        } else {
+          res.status(200).json("Setup your email settings first"); 
+        }
         client.close();
       });
     } catch (err) {
       console.log(err);
-      res.status(400).json({ msg: msges.error });
+      res.status(403).json(msges.error);
     }
   });
 });

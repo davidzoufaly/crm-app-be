@@ -30,6 +30,7 @@ routerWebForm.get("/", (req, res) => {
     const dbTarget = client.db(req.query.key).collection("fields")
     try {
       dbTarget.find({}).toArray((err, data) => {
+        if (err) throw err;
         fs.writeFile(`./src/data/crm-form-${req.query.key}.js`, generateForm(data), function(err) {
           res.status(200).download(`./src/data/crm-form-${req.query.key}.js`);
           client.close();
@@ -41,7 +42,6 @@ routerWebForm.get("/", (req, res) => {
     }
   })
 })
-
 
 //? NOT USED - Update WebForm settings
 // routerWebForm.put("/", (req, res) => {
