@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.express = require("express");
-const routerClients = exports.express.Router();
+const express = require("express");
+const routerClients = express.Router();
 const mongodb = require("mongodb");
 const ObjectId = mongodb.ObjectId;
 const moment = require("moment");
