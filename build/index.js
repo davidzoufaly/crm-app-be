@@ -10,7 +10,7 @@ const clients_1 = __importDefault(require("./routes/api/clients"));
 const fields_1 = __importDefault(require("./routes/api/fields"));
 const emails_1 = __importDefault(require("./routes/api/emails"));
 const webform_1 = __importDefault(require("./routes/api/webform"));
-const Users_1 = __importDefault(require("./routes/api/Users"));
+const users_1 = __importDefault(require("./routes/api/users"));
 const app = express_1.default();
 // Init middleware
 app.use(Logger_1.default);
@@ -23,7 +23,7 @@ app.use("/api/clients", clients_1.default);
 app.use("/api/fields", fields_1.default);
 app.use("/api/emails", emails_1.default);
 app.use("/api/webform", webform_1.default);
-app.use("/api/users", Users_1.default);
+app.use("/api/users", users_1.default);
 app.use(express_1.default.static('src/data'));
 app.use('/static', express_1.default.static('public'));
 app.get("/", (req, res) => {

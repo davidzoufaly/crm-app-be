@@ -2,12 +2,11 @@
   "name": "customerfybe",
   "version": "1.0.0",
   "description": "",
-  "main": "src/server.ts",
+  "main": "src/index.ts",
   "scripts": {
-    "start": "server.js",
     "build": "tsc -p .",
     "dev": "ts-node-dev --respawn --transpileOnly .",
-    "prod": "tsc && node ."
+    "prod": "tsc -p . && node ."
   },
   "keywords": [],
   "author": "",
