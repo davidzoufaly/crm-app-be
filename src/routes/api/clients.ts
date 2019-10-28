@@ -1,26 +1,16 @@
 import { Router } from "express";
-import { MongoClient, ObjectId } from "mongodb";
+import { ObjectId } from "mongodb";
 import moment from "moment";
+import msges from "../assets/msges";
+import client from "../assets/client";
 
 //? ATLAS CONNECTION
 // const username = "RW";
 // const password = "vjODZjlKTSIFKISV";
 // const uri = `mongodb+srv://${username}:${password}@cluster0-g9fj3.mongodb.net/admin?retryWrites=true&w=majority`;
 
-//? LOCALHOST CONNECTION
-const uri = `mongodb://localhost:27017/admin`;
-
-const client = new MongoClient(uri, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true
-});
-
 const collection = "clients";
 const routerClients = Router();
-const msges = {
-  success: "Success",
-  error: "Error"
-};
 
 //? Get All Clients
 routerClients.get("/", (req, res) => {

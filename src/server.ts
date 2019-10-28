@@ -7,13 +7,6 @@ import routerEmails from "./routes/api/emails";
 import routerWebForm from "./routes/api/webform";
 import routerUsers from "./routes/api/Users";
 
-/*TODO: FIXNOUT .close() 
-the options [servers] is not supported
-the options [caseTranslate] is not supported
-the options [dbName] is not supported
-null
-*/
-
 const app = express();
 
 // Init middleware
@@ -38,6 +31,6 @@ app.get("/", (req, res) => {
   res.send("This is backend of CRM-APP");
 });
 
-app.listen(8080, () => {
-  console.log("CRM APP listening on port 8080!");
+app.listen(process.env.PORT || 8080, () => {
+  console.log(`CRM APP listening on port ${process.env.PORT || "8080"}!`);
 });

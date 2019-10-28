@@ -1,28 +1,10 @@
 import { Router } from "express";
-import { MongoClient } from "mongodb";
 import fs from "fs";
 import generateForm from "../../generateForm";
+import msges from "../assets/msges";
+import client from "../assets/client";
 
-//? ATLAS CONNECTION
-// const username = "RW";
-// const password = "vjODZjlKTSIFKISV";
-// const uri = `mongodb+srv://${username}:${password}@cluster0-g9fj3.mongodb.net/admin?retryWrites=true&w=majority`;
-
-//? LOCALHOST CONNECTION
-const uri = `mongodb://localhost:27017/admin`;
-
-const client = new MongoClient(uri, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true
-});
-const db = "crm-app";
-const collection = "settings";
 const routerWebForm = Router();
-const msges = {
-  success: "Success",
-  error: "Error"
-};
-
 
 //? Generate form and download it
 routerWebForm.get("/", (req, res) => {

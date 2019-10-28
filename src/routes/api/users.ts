@@ -1,24 +1,11 @@
 import { Router } from "express";
-import { MongoClient, ObjectId } from "mongodb";
 import generateUniqueId from "generate-unique-id";
-import moment from "moment";
+import msges from "../assets/msges";
+import client from "../assets/client";
 
-//? LOCALHOST CONNECTION
-const uri = `mongodb://localhost:27017/admin`;
-
-const client = new MongoClient(uri, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true
-});
 const db = "users";
 const collection = "users";
 const routerUsers = Router();
-
-const msges = {
-  success: "Success",
-  error: "Error",
-  exist: "Exist"
-};
 
 //? Register user and create him DB
 routerUsers.post("/", (req, res) => {

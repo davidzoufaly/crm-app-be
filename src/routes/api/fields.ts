@@ -1,24 +1,11 @@
 import { Router } from "express";
-import { MongoClient, ObjectId } from "mongodb";
+import { ObjectId } from "mongodb";
 import moment from "moment";
-import fs from "fs";
-import generateForm from "../../generateForm";
+import msges from "../assets/msges";
+import client from "../assets/client";
 
-//? LOCALHOST CONNECTION
-const uri = `mongodb://localhost:27017/admin`;
-
-const client = new MongoClient(uri, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true
-});
-const db = "crm-app";
 const collection = "fields";
 const routerFields = Router();
-
-const msges = {
-  success: "Success",
-  error: "Error",
-};
 
 //? Get All Fields
 routerFields.get("/", (req, res) => {

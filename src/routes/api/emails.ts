@@ -1,23 +1,10 @@
 import nodemailer from "nodemailer";
 import { Router } from "express";
-import { MongoClient, ObjectId } from "mongodb";
 import moment from "moment";
+import msges from "../assets/msges";
+import client from "../assets/client";
 
-//? LOCALHOST CONNECTION
-const uri = `mongodb://localhost:27017/admin`;
-
-const client = new MongoClient(uri, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-   
-});
 const routerEmails = Router();
-
-const msges = {
-  success: "Success",
-  error: "Error",
-  credentialsNotSet: "Setup your email settings first"
-};
 
 //? Get All Emails
 routerEmails.get("/", (req, res) => {
