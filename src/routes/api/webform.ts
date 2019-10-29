@@ -8,13 +8,15 @@ const generateForm = require("../../generateForm");
 
 //? Generate form and download it
 routerWebForm.get("/", (req, res) => {
+  const key = req.query.key;
+  
   client.connect((err, client) => {
     const dbTarget = client.db(req.query.key).collection("fields")
     try {
       dbTarget.find({}).toArray((err, data) => {
         if (err) throw err;
-        fs.writeFile(`./src/data/crm-form-${req.query.key}.js`, generateForm(data), function(err) {
-          res.status(200).download(`./src/data/crm-form-${req.query.key}.js`);
+        fs.writeFile(`./src/data/crm-form-${key}.js`, generateForm(data, key), function(err) {
+          res.status(200).download(`./src/data/crm-form-${key}.js`);
           client.close();
         })
       })

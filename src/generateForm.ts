@@ -1,4 +1,4 @@
-const generateForm = (req: any) => {
+const generateForm = (req, key) => {
   const inputs: string[] = [];
   req.map((e: any, i: number): any => {
     if (e.fieldInForm) {
@@ -121,7 +121,7 @@ const generateForm = (req: any) => {
         submit();
         async function submit() {
           const res = await fetch(
-            '${process.env.HOST_BE}/api/clients', {
+            '${process.env.HOST_BE}/api/clients?key=${key}', {
               method: 'POST',
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify(reqObject),
