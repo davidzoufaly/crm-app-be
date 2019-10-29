@@ -114,7 +114,7 @@ routerEmails.post("/send", (req, res) => {
     try {
       dbTarget.findOne({settingsName: "emailSettings"}, (err, data) => {
         if (err) throw err;
-
+        console.log(data);
         if (data.username.includes("@") && data.pass.length !== 0) {
           const transporter = nodemailer.createTransport({
             service: "gmail",
