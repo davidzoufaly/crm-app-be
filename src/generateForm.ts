@@ -121,7 +121,7 @@ const generateForm = (req: any) => {
         submit();
         async function submit() {
           const res = await fetch(
-            'http://localhost:8080/api/clients', {
+            '${process.env.HOST_BE}/api/clients', {
               method: 'POST',
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify(reqObject),
