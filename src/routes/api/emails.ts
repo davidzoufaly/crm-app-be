@@ -118,6 +118,8 @@ routerEmails.post("/send", (req, res) => {
         if (data.username.includes("@") && data.pass.length !== 0) {
           const transporter = nodemailer.createTransport({
             service: "gmail",
+            port: 465,
+            secure: true,
             auth: {
               user: data.username,
               pass: data.pass
