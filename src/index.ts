@@ -29,7 +29,7 @@ app.use(express.static('src/data'))
 app.use('/static', express.static('public'))
 
 app.get("/", (req, res) => {
-  res.send("This is backend of lightweight CRM-APP");
+  res.send("This is backend of lightweight CRM-APP!");
 });
 
 app.get("/fff", (req, res) => {
