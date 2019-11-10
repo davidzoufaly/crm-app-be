@@ -10,19 +10,18 @@ const collection = "users";
 
 //? Register user and create him DB
 routerUsers.post("/", (req, res) => {
-
   let user = req.body;
   user["Date Added"] = new Date();
   user.Api_KEY = generateUniqueId({
-      length: 32
-  }).toUpperCase()
-    
+    length: 32
+  }).toUpperCase();
+
   client.connect((err, client) => {
     if (err) throw err;
     console.log(err);
     const dbTarget = client.db(db).collection(collection);
     try {
-        //check if user exists, if not insert him, else do nothing and return msg
+      //check if user exists, if not insert him, else do nothing and return msg
       dbTarget.findOneAndUpdate(
         { username: user.username },
         { $setOnInsert: user },
@@ -116,8 +115,8 @@ routerUsers.post("/authenticate-user", (req, res) => {
         data === null
           ? res.status(200).json({ msg: msges.error })
           : data.password === req.body.password
-          ? res.status(200).json({msg: msges.success, key: data.Api_KEY})
-          : res.status(200).json({ msg: msges.error });
+            ? res.status(200).json({ msg: msges.success, key: data.Api_KEY })
+            : res.status(200).json({ msg: msges.error });
         if (err) throw err;
       });
       client.close();

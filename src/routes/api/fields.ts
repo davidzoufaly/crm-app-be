@@ -93,7 +93,6 @@ routerFields.post("/", (req, res) => {
 });
 
 //? Update multiple fields
-//? generate crm-form.js on BE
 routerFields.put("/", (req, res) => {
     client.connect((err, client) => {
       if (err) throw err;

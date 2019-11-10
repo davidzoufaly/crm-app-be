@@ -11,6 +11,8 @@ routerWebForm.get("/", (req, res) => {
   const key = req.query.key;
   
   client.connect((err, client) => {
+    if (err) throw err;
+    console.log(err);
     const dbTarget = client.db(req.query.key).collection("fields")
     try {
       dbTarget.find({}).toArray((err, data) => {

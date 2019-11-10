@@ -1,9 +1,11 @@
 const generateForm = (req, key) => {
   const inputs: string[] = [];
-  req.map((e: any, i: number): any => {
+  req
+    .sort((a, b) => a.order - b.order)
+    .map((e: any, i: number): any => {
     if (e.fieldInForm) {
       if (e.fieldType === "text" || e.fieldType === "number") {
-        console.log("text input generated");
+        console.log(`text input generated ${e.fieldName}`);
         inputs.push(
             `var inputWrapper${i} = document.createElement('DIV');
             inputWrapper${i}.setAttribute('class', 'crm-form__input-wrapper');
@@ -24,7 +26,7 @@ const generateForm = (req, key) => {
         );
       } else if (e.fieldType === "select") {
         if (e.fieldFormVisible) {
-          console.log("visible select generated");
+          console.log(`visible select generated ${e.fieldName}`);
           const optionsSelect: string[] = [];
 
           e.fieldOptions.map((option: any, index: number) => {
@@ -55,7 +57,7 @@ const generateForm = (req, key) => {
               inputWrapper${i}.appendChild(select${i});
               var option${i} = document.createElement('OPTION');
               node${i} = document.createTextNode('---');
-              option${i}.appendChild(node${i})
+              option${i}.appendChild(node${i});
               select${i}.appendChild(option${i});
                 ${optionsSelect.join(";")}`
           );

@@ -18,7 +18,6 @@ routerClients.get("/", (req, res) => {
     const dbTarget = client.db(req.query.key).collection(collection);
     try {
       dbTarget.find({}).toArray((err, data) => {
-        console.log(data);
         if (err) throw err;
         res.status(200).json(data);
         client.close();
@@ -53,13 +52,10 @@ routerClients.delete("/", (req, res) => {
 
 //? Get from last week
 routerClients.get("/last-week", (req, res) => {
-
   const today = new Date();
   const todayTimeStamp = today.getTime();
   const milsInWeek = 7*24*60*60*1000;
-
   const timeStampWeekAgo = todayTimeStamp - milsInWeek;
-
   client.connect((err, client) => {
   if (err) throw err;
   console.log(err);
@@ -69,7 +65,6 @@ routerClients.get("/last-week", (req, res) => {
       const oneWeekOldClients = data.map((client : any) => {
         return {...client, ["Date added"]:  new Date(client["Date added"]).getTime()}
       }).filter(client => timeStampWeekAgo - client["Date added"] < 0).length;
-
       if (err) throw err;
       res.status(200).json(oneWeekOldClients);
       client.close();

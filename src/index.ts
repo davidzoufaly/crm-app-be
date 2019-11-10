@@ -18,7 +18,7 @@ app.use(Cors);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// API Clients
+// REST API
 app.use("/api/clients", routerClients);
 app.use("/api/fields", routerFields);
 app.use("/api/emails", routerEmails);
@@ -31,11 +31,6 @@ app.use('/static', express.static('public'))
 app.get("/", (req, res) => {
   res.send("This is backend of lightweight CRM-APP!");
 });
-
-app.get("/fff", (req, res) => {
-  res.send("This is fff");
-});
-
 
 app.listen(process.env.PORT || 8080, () => {
   console.log(`CRM APP listening on port ${process.env.PORT || "8080"}!`);
