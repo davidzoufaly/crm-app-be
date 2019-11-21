@@ -1,6 +1,9 @@
-const generateForm = (req, key) => {
+const express = require("express");
+const app = express()
+
+const generateForm = (request, key, host) => {
   const inputs: string[] = [];
-  req
+  request
     .sort((a, b) => a.order - b.order)
     .map((e: any, i: number): any => {
     if (e.fieldInForm) {
@@ -117,24 +120,21 @@ const generateForm = (req, key) => {
     stylingForm.push(`document.querySelectorAll('.${typeEl.class}').forEach(e => e.style.cssText = '${typeEl.styles}')`)
   })
 
-      const postFc = `function crmSubmit() {
+      const postFc = `async function crmSubmit() {
         let reqObject = {}
         Array.from(document.querySelectorAll('.crm-form-data')).forEach(el => reqObject[el.name] = el.value);
-        submit();
-        async function submit() {
-          const res = await fetch(
-            '${process.env.HOST_BE}/api/clients?key=${key}', {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify(reqObject),
-            }
-          )
-          const resData = await res.json();
-          if (resData.msg = 'Success') {
-            document.querySelectorAll('.crm-form-data').forEach(el => el.classList.contains('crm-form__select') ? el.selectedIndex = 0 : el.value = "");
-          } else {
-            alert('Something went wrong')
+        const res = await fetch(
+          '${host}/api/clients?key=${key}', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(reqObject),
           }
+        )
+        const resData = await res.json();
+        if (resData.msg = 'Success') {
+          document.querySelectorAll('.crm-form-data').forEach(el => el.classList.contains('crm-form__select') ? el.selectedIndex = 0 : el.value = "");
+        } else {
+          alert('Something went wrong')
         }
       }`
 

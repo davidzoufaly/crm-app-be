@@ -17,7 +17,8 @@ routerWebForm.get("/", (req, res) => {
     try {
       dbTarget.find({}).toArray((err, data) => {
         if (err) throw err;
-        fs.writeFile(`./src/data/crm-form-${key}.js`, generateForm(data, key), function(err) {
+        const host = `${req.protocol}://${req.get('host')}`;
+        fs.writeFile(`./src/data/crm-form-${key}.js`, generateForm(data, key, host), function(err) {
           res.status(200).download(`./src/data/crm-form-${key}.js`);
           client.close();
         })
